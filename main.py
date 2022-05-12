@@ -1,6 +1,7 @@
 import cv2 
 import mediapipe as mp 
 import time  
+import math
 
 cap = cv2.VideoCapture(0) # подключение к камере
 mp_Hands = mp.solutions.hands # хотим распозновать руки (hands)
@@ -24,8 +25,8 @@ while cap.isOpened():
     if multiLandMarks: 
         for idx, handLms in enumerate(multiLandMarks):
             lbl = result.multi_handedness[idx].classification[0].label
-            #print(lbl) 
-        upCount = 0 #счетчик пальцев 
+        print(lbl) 
+        upCount = 0 #счетчик пальце
         for handLms in multiLandMarks:
             mpDraw.draw_landmarks(image, handLms, mp_Hands.HAND_CONNECTIONS)
             fingersList = [] # список ключевых точек в пикселях 
@@ -47,7 +48,6 @@ while cap.isOpened():
             else:
                 if fingersList[thumb_Coord[0]][0] > fingersList[thumb_Coord[1]][0]:
                     upCount += 1 
-
         cv2.putText(image, str(upCount), (50, 150), cv2.FONT_HERSHEY_PLAIN, 12, (0, 200, 50), 12)
         print(upCount) 
 
@@ -56,6 +56,6 @@ while cap.isOpened():
     cv2.putText(image, f'FPS: {int(fps)}', (400, 150), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (240, 100, 0), 3)
     cv2.imshow('image', image)   
     if cv2.waitKey(1) & 0xFF == 27: # ESC
-        break 
+            break   
     
 cap.release() 
